@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>shopping cart</h1>
+  </body>
+  <script type="text/javascript">
+      var Cart = [];
+      var Item = function(name,price,count){
+        this.name=name
+        this.price=price
+        this.count=count
+      }
+
+      function addItemToCart(name, price, count){
+         for(var item in Cart){
+           if(Cart[item].name===name){
+             Cart[item].count +=count;
+             return;
+           }
+         }
+        var item = new Item(name,price,count);
+        Cart.push(item);
+      }
+
+      addItemToCart("apple",599,1);
+      addItemToCart("beans",599,8);
+      addItemToCart("yam",599,45);
+      addItemToCart("eguisi",599,1);
+      console.log(Cart[0].count);
+      // removes one item from charset
+      function removeItemFromCart(name){
+      for(var item in Cart){
+        if(Cart[item].name===name){
+          Cart[item].count--;
+          if(Cart[item].count===0){
+            Cart.splice(item, 1);
+          }
+          break;
+        }
+
+      }
+    }
+    removeItemFromCart("apple");
+
+
+      //removeItemFromCartAll() removes all item from chart
+    function removeItemFromCartAll(name){
+      for(var item in Cart){
+        if(Cart[item].name===name){
+            Cart.splice(item, 1);
+            break;
+        }
+
+      }
+    }
+      //clearCart ()
+      function clearCart(){
+        Cart = [];
+      }
+    //  clearCart();
+      //countCart()  returns total count
+      function countCart(){
+        var totalCount=0;
+        for(let item in Cart){
+          totalCount+=Cart[item].count;
+        }
+        return totalCount;
+      }
+      console.log(countCart());
+      //totalCount() returns total cost
+      function totalCount(){
+        var total=0;
+        for(let item in Cart){
+          total+=Cart[item].price;
+        }
+        return total;
+      }
+      console.log(totalCount());
+      //listCart()
+      //first partten
+      /*
+      function listCart(){
+        var arrayObject=[];
+        for(var i in Cart){
+          var newItem = new Item(Cart[i].name,Cart[i].price,Cart[i].count);
+          arrayObject.push(newItem);
+        }
+        return arrayObject;
+      }
+      */
+      //second partern
+      function listCart(){
+        var arrayObject=[];
+        for(var i in Cart){
+           var obj = {};
+          for(var keys in Cart[i]){
+            obj[keys] = Cart[i][keys];
+          }
+          arrayObject.push(obj);
+        }
+        return arrayObject;
+      }
+      var newwer=listCart();
+      newwer[0].name="bole";
+      console.log(newwer[0].name);
+      console.log(Cart[0].name);
+      //saveCart()
+      //loadCart()
+
+
+
+  </script>
+</html>
