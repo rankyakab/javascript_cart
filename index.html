@@ -6,8 +6,44 @@
   </head>
   <body>
     <h1>shopping cart</h1>
+	<div>
+		<ul>
+			<li><a class="add_to_cart" href="" data-name="apple" data-price="33.00" > Apple | $33.00 </a></li>
+			<li><a class="add_to_cart" href="" data-name="mango" data-price="34.00" > Mango | $34.00 </a></li>
+			<li><a  class="add_to_cart" href="" data-name="orange" data-price="38.00" > orange | $38.00 </a></li>
+			<li><a  class="add_to_cart" href="" data-name="paw paw" data-price="43.00" > paw paw | $43.00 </a></li>
+		</ul>
+		<button id="clear_cart"> clear cart </button>
+	</div>
+	<div>
+		
+		<ul id="show_cart">
+			
+		</ul>
+	</div>
   </body>
   <script type="text/javascript">
+  var add_to_cart = document.getElementsByClassName("add_to_cart");
+  for(let i in Array.from(add_to_cart)){
+  add_to_cart[i].addEventListener("click",(event)=>{
+	event.preventDefault();
+	var name = event.target.getAttribute("data-name");
+	var price = Number(event.target.getAttribute("data-price"));
+	console.log(name, price)
+	addItemToCart(name,price,1);
+	display_cart();
+  });
+  }
+
+  function display_cart(){
+		var display_section = document.getElementById("show_cart");
+		var display = "";
+		var cartArray = listCart();
+		for(let i in cartArray){
+			display+="<li> Name : "+cartArray[i].name+" || Count : "+cartArray[i].count+" </li>";
+		}
+		display_section.innerHTML=display;
+  }
       var Cart = [];
       var Item = function(name,price,count){
         this.name=name
@@ -24,13 +60,11 @@
          }
         var item = new Item(name,price,count);
         Cart.push(item);
+		saveCart();
       }
 
-      addItemToCart("apple",599,1);
-      addItemToCart("beans",599,8);
-      addItemToCart("yam",599,45);
-      addItemToCart("eguisi",599,1);
-      console.log(Cart[0].count);
+
+  
       // removes one item from charset
       function removeItemFromCart(name){
       for(var item in Cart){
@@ -43,8 +77,9 @@
         }
 
       }
+	  saveCart();
     }
-    removeItemFromCart("apple");
+ 
 
 
       //removeItemFromCartAll() removes all item from chart
@@ -56,10 +91,13 @@
         }
 
       }
+	  
+	  saveCart();
     }
       //clearCart ()
       function clearCart(){
         Cart = [];
+		saveCart();
       }
     //  clearCart();
       //countCart()  returns total count
@@ -79,7 +117,7 @@
         }
         return total;
       }
-      console.log(totalCount());
+     
       //listCart()
       //first partten
       /*
@@ -104,12 +142,19 @@
         }
         return arrayObject;
       }
-      var newwer=listCart();
-      newwer[0].name="bole";
-      console.log(newwer[0].name);
-      console.log(Cart[0].name);
+      
       //saveCart()
+	  function saveCart(){
+		localStorage.setItem("shopping_cart", JSON.stringify(Cart));
+	  }
+	  localStorage.setItem("bola",4 );
       //loadCart()
+	  function loadCart(){
+		 Cart = JSON.parse(localStorage.getItem("shopping_cart"));
+	  }
+	 loadCart();
+	  var right = listCart();
+	 console.log(right);
 
 
 
