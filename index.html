@@ -9,21 +9,29 @@
 	<div>
 		<ul>
 			<li><a class="add_to_cart" href="" data-name="apple" data-price="33.00" > Apple | $33.00 </a></li>
-			<li><a class="add_to_cart" href="" data-name="mango" data-price="34.00" > Mango | $34.00 </a></li>
-			<li><a  class="add_to_cart" href="" data-name="orange" data-price="38.00" > orange | $38.00 </a></li>
-			<li><a  class="add_to_cart" href="" data-name="paw paw" data-price="43.00" > paw paw | $43.00 </a></li>
+			<li><a class="add_to_cart" href="" data-name="mango" data-price="34.30" > Mango | $34.30 </a></li>
+			<li><a  class="add_to_cart" href="" data-name="orange" data-price="38.52" > orange | $38.52 </a></li>
+			<li><a  class="add_to_cart" href="" data-name="paw paw" data-price="43.20" > paw paw | $43.20 </a></li>
 		</ul>
 		<button id="clear_cart"> clear cart </button>
 	</div>
 	<div>
 		
 		<ul id="show_cart">
-			
+			??????
 		</ul>
+		<div >
+		Total Cart:$ <span id="total_count"></span>
+		</div>
 	</div>
   </body>
   <script type="text/javascript">
+   var Cart = [];
+  loadCart()
+  display_cart();
   var add_to_cart = document.getElementsByClassName("add_to_cart");
+  var clear_cart = document.getElementById("clear_cart");
+  var delete_item = document.getElementsByClassName("delete_item");
   for(let i in Array.from(add_to_cart)){
   add_to_cart[i].addEventListener("click",(event)=>{
 	event.preventDefault();
@@ -34,17 +42,36 @@
 	display_cart();
   });
   }
+  
+   for(let i in Array.from(delete_item)){
+		  delete_item[i].addEventListener("click",(event)=>{
+			event.preventDefault();
+			var name = event.target.parentNode.getAttribute("data-name");
+			removeItemFromCartAll(name)
+			display_cart();
+			
+		  }, true);
+		  }
+   
+  
+  clear_cart.addEventListener("click",event=>{
+	clearCart();
+	display_cart();
+  })
 
   function display_cart(){
+        
 		var display_section = document.getElementById("show_cart");
 		var display = "";
 		var cartArray = listCart();
 		for(let i in cartArray){
-			display+="<li> Name : "+cartArray[i].name+" || Count : "+cartArray[i].count+" </li>";
+			display+="<li data-name='"+cartArray[i].name+"'> Name : "+cartArray[i].name+" || price "+cartArray[i].price+" || Count : "+cartArray[i].count+" || TOTAL "+cartArray[i].total+" <button class='delete_item'>X</button></li>";
 		}
 		display_section.innerHTML=display;
+		document.getElementById("total_count").innerHTML=totalCount();
+		
   }
-      var Cart = [];
+     
       var Item = function(name,price,count){
         this.name=name
         this.price=price
@@ -55,6 +82,7 @@
          for(var item in Cart){
            if(Cart[item].name===name){
              Cart[item].count +=count;
+			 saveCart();
              return;
            }
          }
@@ -106,16 +134,17 @@
         for(let item in Cart){
           totalCount+=Cart[item].count;
         }
-        return totalCount;
+        return totalCount
       }
       console.log(countCart());
       //totalCount() returns total cost
       function totalCount(){
         var total=0;
+		 loadCart();
         for(let item in Cart){
-          total+=Cart[item].price;
-        }
-        return total;
+				total+=Cart[item].price*Cart[item].count;
+	        }
+        return total.toFixed(2);
       }
      
       //listCart()
@@ -138,6 +167,7 @@
           for(var keys in Cart[i]){
             obj[keys] = Cart[i][keys];
           }
+		  obj.total = (obj.count * obj.price).toFixed(2)
           arrayObject.push(obj);
         }
         return arrayObject;
@@ -152,9 +182,7 @@
 	  function loadCart(){
 		 Cart = JSON.parse(localStorage.getItem("shopping_cart"));
 	  }
-	 loadCart();
-	  var right = listCart();
-	 console.log(right);
+	
 
 
 
