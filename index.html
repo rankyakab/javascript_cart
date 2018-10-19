@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+
     <meta charset="utf-8">
     <title></title>
   </head>
@@ -16,7 +17,7 @@
 		<button id="clear_cart"> clear cart </button>
 	</div>
 	<div>
-		
+
 		<ul id="show_cart">
 			??????
 		</ul>
@@ -24,6 +25,7 @@
 		Total Cart:$ <span id="total_count"></span>
 		</div>
 	</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   </body>
   <script type="text/javascript">
    
@@ -31,25 +33,35 @@
   var add_to_cart = document.getElementsByClassName("add_to_cart");
   var clear_cart = document.getElementById("clear_cart");
   var delete_item = document.getElementsByClassName("delete_item");
+
    var minus_item = document.getElementsByClassName("minus_item");
     var add_item = document.getElementsByClassName("add_item");
+
+  var minus_item = document.getElementsByClassName("subtract_item");
+
   for(let i in Array.from(add_to_cart)){
   add_to_cart[i].addEventListener("click",(event)=>{
 	event.preventDefault();
 	var name = event.target.getAttribute("data-name");
 	var price = Number(event.target.getAttribute("data-price"));
 	console.log(name, price)
+
 	pracShoppingCart.addItemToCart(name,price,1);
 	location.reload();
+
+
   });
+
   }
-  
+
+
    for(let i in Array.from(delete_item)){
 		  delete_item[i].addEventListener("click",(event)=>{
-			console.log("wadap a")
+			
 			event.preventDefault();
 			var name = event.target.parentNode.getAttribute("data-name");
-			console.log("wadap");
+
+			
 			pracShoppingCart.removeItemFromCartAll(name);
 			location.reload();
 			
@@ -76,17 +88,19 @@
 			
 		  }, true);
 		  }
-  
+
   clear_cart.addEventListener("click",event=>{
 	pracShoppingCart.clearCart();
 	display_cart();
   })
-    function display_cart(){
-        
+
+  function display_cart(){
+
 		var display_section = document.getElementById("show_cart");
 		var display = "";
 		var cartArray = pracShoppingCart.listCart();
 		for(let i in cartArray){
+
 			display+="<li data-name='"+cartArray[i].name+"'> Name : "+cartArray[i].name+" || price "+cartArray[i].price+" || Count : "+cartArray[i].count+" || TOTAL "+cartArray[i].total+" <button class='add_item'>+</button> <button class='minus_item'>-</button> <button class='delete_item'>X</button></li>";
 		}
 		display_section.innerHTML=display;
@@ -103,6 +117,7 @@
            if(this.Cart[item].name===name){
              this.Cart[item].count +=count;
 			 this.saveCart();
+
              return;
            }
          }
@@ -110,6 +125,7 @@
         this.Cart.push(item);
 		this.saveCart();
       }
+
 	  pracShoppingCart.Cart = [];
 	  
 	  // removes one item from charset
@@ -117,6 +133,7 @@
       for(var item in this.Cart){
         if(this.Cart[item].name===name){
           this.Cart[item].count--;
+
           if(Cart[item].count===0){
             this.Cart.splice(item, 1);
           }
@@ -126,17 +143,21 @@
       }
 	  this.saveCart();
     }
+
 	 //removeItemFromCartAll() removes all item from chart
      pracShoppingCart.removeItemFromCartAll = function(name){
       for(var item in this.Cart){
         if(this.Cart[item].name===name){
             this.Cart.splice(item, 1);
+
             break;
         }
 
       }
+
 	  
 	  this.saveCart();
+
     }
 	  //clearCart ()
       pracShoppingCart.clearCart= function(){
@@ -151,8 +172,10 @@
         }
         return totalCount
       }
+
            //totalCount() returns total cost
       pracShoppingCart.totalCount = function(){
+
         var total=0;
 		 this.loadCart();
         for(let item in this.Cart){
@@ -160,6 +183,7 @@
 	        }
         return total.toFixed(2);
       }
+
      //second partern of listing the objects in the shopping cart into another array
      pracShoppingCart.listCart = function(){
         var arrayObject=[];
@@ -218,7 +242,6 @@ pracShoppingCart.loadCart()
       }
       */
 
-      
 
 
 	
