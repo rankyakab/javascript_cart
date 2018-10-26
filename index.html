@@ -21,23 +21,30 @@
 		<ul id="show_cart">
 			??????
 		</ul>
+		<div > you have <span id="count_cart">X</span> Elements in your cart</div>
 		<div >
 		Total Cart:$ <span id="total_count"></span>
 		</div>
 	</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="shoppingCart.js"></script>
   </body>
   <script type="text/javascript">
+   
+   
+
+ 
+  display_cart();
    
   
   var add_to_cart = document.getElementsByClassName("add_to_cart");
   var clear_cart = document.getElementById("clear_cart");
   var delete_item = document.getElementsByClassName("delete_item");
-
+	var item_count = document.getElementsByClassName("item_count");
    var minus_item = document.getElementsByClassName("minus_item");
     var add_item = document.getElementsByClassName("add_item");
 
-  var minus_item = document.getElementsByClassName("subtract_item");
+  
 
   for(let i in Array.from(add_to_cart)){
   add_to_cart[i].addEventListener("click",(event)=>{
@@ -54,7 +61,19 @@
 
   }
 
-
+	   for(let i in Array.from(item_count)){
+		  item_count[i].addEventListener("change",(event)=>{
+			
+			event.preventDefault();
+			let itemName = event.target.parentNode.getAttribute("data-name");
+			let count =Number(event.target.value);
+			
+			pracShoppingCart.setCountForItem(itemName, count);
+			location.reload();
+			
+			
+		  }, true);
+		  }
    for(let i in Array.from(delete_item)){
 		  delete_item[i].addEventListener("click",(event)=>{
 			
@@ -69,6 +88,7 @@
 		  }, true);
 		  }
       for(let i in Array.from(minus_item)){
+
 		  minus_item[i].addEventListener("click",(event)=>{
 			event.preventDefault();
 			let name = event.target.parentNode.getAttribute("data-name");
@@ -79,6 +99,7 @@
 		  }, true);
 		  }
 		 for(let i in Array.from(add_item)){
+
 		  add_item[i].addEventListener("click",(event)=>{
 			event.preventDefault();
 			let name = event.target.parentNode.getAttribute("data-name");
@@ -101,131 +122,16 @@
 		var cartArray = pracShoppingCart.listCart();
 		for(let i in cartArray){
 
-			display+="<li data-name='"+cartArray[i].name+"'> Name : "+cartArray[i].name+" || price "+cartArray[i].price+" || Count : "+cartArray[i].count+" || TOTAL "+cartArray[i].total+" <button class='add_item'>+</button> <button class='minus_item'>-</button> <button class='delete_item'>X</button></li>";
+			display+="<li data-name='"+cartArray[i].name+"'> Name : "+cartArray[i].name+" <input class='item_count' type='number' data-name='"+cartArray[i].name+"' value='"+cartArray[i].count+"'/> price "+cartArray[i].price+" || TOTAL "+cartArray[i].total+" <button class='add_item'>+</button> <button class='minus_item'>-</button> <button class='delete_item'>X</button></li>";
 		}
 		display_section.innerHTML=display;
+		document.getElementById("count_cart").innerHTML = pracShoppingCart.countCart();
 		document.getElementById("total_count").innerHTML=pracShoppingCart.totalCount();
 	//	location.reload();
 		
   }
      
-	var pracShoppingCart = {};
-	
-	//this creates a new object and adds to cart and save
-	pracShoppingCart.addItemToCart= function (name, price, count){
-         for(var item in this.Cart){
-           if(this.Cart[item].name===name){
-             this.Cart[item].count +=count;
-			 this.saveCart();
-
-             return;
-           }
-         }
-        var item = new this.Item(name,price,count);
-        this.Cart.push(item);
-		this.saveCart();
-      }
-
-	  pracShoppingCart.Cart = [];
-	  
-	  // removes one item from charset
-	  pracShoppingCart.removeItemFromCart =  function(name){
-      for(var item in this.Cart){
-        if(this.Cart[item].name===name){
-          this.Cart[item].count--;
-
-          if(Cart[item].count===0){
-            this.Cart.splice(item, 1);
-          }
-          break;
-        }
-
-      }
-	  this.saveCart();
-    }
-
-	 //removeItemFromCartAll() removes all item from chart
-     pracShoppingCart.removeItemFromCartAll = function(name){
-      for(var item in this.Cart){
-        if(this.Cart[item].name===name){
-            this.Cart.splice(item, 1);
-
-            break;
-        }
-
-      }
-
-	  
-	  this.saveCart();
-
-    }
-	  //clearCart ()
-      pracShoppingCart.clearCart= function(){
-        this.Cart = [];
-		this.saveCart();
-      }
-	  //countCart()  returns total count
-       pracShoppingCart.countCart = function(){
-        var totalCount=0;
-        for(let item in this.Cart){
-          totalCount+=this.Cart[item].count;
-        }
-        return totalCount
-      }
-
-           //totalCount() returns total cost
-      pracShoppingCart.totalCount = function(){
-
-        var total=0;
-		 this.loadCart();
-        for(let item in this.Cart){
-				total+=this.Cart[item].price*this.Cart[item].count;
-	        }
-        return total.toFixed(2);
-      }
-
-     //second partern of listing the objects in the shopping cart into another array
-     pracShoppingCart.listCart = function(){
-        var arrayObject=[];
-        for(var i in this.Cart){
-           var obj = {};
-          for(var keys in this.Cart[i]){
-            obj[keys] = this.Cart[i][keys];
-          }
-		  obj.total = (obj.count * obj.price).toFixed(2)
-          arrayObject.push(obj);
-        }
-        return arrayObject;
-      }
-	        //saveCart()
-	   pracShoppingCart.saveCart = function (){
-		localStorage.setItem("shopping_cart", JSON.stringify(this.Cart));
-	  }
-	  //localStorage.setItem("bola",4 );
-      //loadCart()
-	  pracShoppingCart.loadCart =  function (){
-		  this.Cart = JSON.parse(localStorage.getItem("shopping_cart"));
-	  }
-	
-       pracShoppingCart.Item = function(name,price,count){
-        this.name=name
-        this.price=price
-        this.count=count
-      }
-
-     
-
-
-  
-      
-    
  
-
-
-pracShoppingCart.loadCart()
- 
-  display_cart();
-    
     
 
 
